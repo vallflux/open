@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sweet Fifteen Quenaa ✨</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+  <audio id="bgm" loop>
+    <source src="bgm.mp3" type="audio/mpeg">
+  </audio>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+    body {
+      /* Ini dia gradasi Pink Pastel ke Peach-nya */
+      background: linear-gradient(135deg, #ffb8d1 0%, #ffdac1 100%);
+      background-size: 200% 200%;
+      animation: gradientBG 10s ease infinite;
+      overflow-x: hidden;
+      color: #4a4a4a;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Animasi Latar Belakang Melayang */
+    .floating-item {
+      position: fixed;
+      bottom: -100px;
+      animation: floatUp linear infinite;
+      z-index: 0;
+      opacity: 0.6;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* Efek Tap Cinta (Click Effect) */
+    @keyframes popHeart {
+      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+      100% { transform: translate(-50%, -100px) scale(1.5); opacity: 0; }
+    }
+
+    /* Confetti Jatuh */
+    .confetti {
+      position: fixed;
+      top: -10px;
+      z-index: 9999;
+      width: 10px;
+      height: 10px;
+      animation: fall linear forwards;
+    }
+    @keyframes fall {
+      to { transform: translateY(110vh) rotate(720deg); }
+    }
+
+    .intro, .page {
+      position: absolute;
+      inset: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px 20px 100px;
+      transition: opacity 0.8s ease, transform 0.8s ease;
+      overflow-y: auto;
+      z-index: 10;
+    }
+
+    .hidden { 
+      opacity: 0; 
+      pointer-events: none; 
+      transform: translateY(30px) scale(0.95); 
+    }
+
+    h1.title, .intro h1 {
+      font-family: 'Dancing Script', cursive;
+      font-size: 4rem;
+      color: #b56576;
+      text-shadow: 2px 2px 8px rgba(181, 101, 118, 0.2);
+      margin-bottom: 10px;
+    }
+
+    /* Efek Judul Glowing Halaman 1 */
+    h1.title {
+      animation: titleGlow 2s ease-in-out infinite alternate;
+    }
+    @keyframes titleGlow {
+      from { text-shadow: 0 0 5px rgba(255,184,209,0.5), 0 0 10px rgba(255,184,209,0.5); }
+      to { text-shadow: 0 0 15px rgba(181,101,118,0.7), 0 0 20px rgba(181,101,118,0.5); }
+    }
+
+    .intro p {
+      font-size: 1.1rem;
+      color: #555;
+    }
+
+    /* Tombol Amplop Lebih Gemes */
+    .open-btn {
+      font-size: 4.5rem;
+      cursor: pointer;
+      animation: heartbeat 1.5s infinite, glow 2s infinite alternate;
+      margin-top: 20px;
+      border-radius: 50%;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1) rotate(3deg); }
+    }
+    
+    @keyframes glow {
+      from { filter: drop-shadow(0 0 10px #ffdac1); }
+      to { filter: drop-shadow(0 0 25px #b56576); }
+    }
+
+    .photo-gallery {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap; 
+      gap: 15px;
+      margin: 15px 0 25px 0;
+      width: 100%;
+      max-width: 550px;
+    }
+
+    /* Polaroid dengan Efek Selotip Washi Tape & Zoom pas di-tap */
+    .polaroid {
+      background: #fff;
+      padding: 8px 8px 10px 8px; 
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      width: 135px; 
+      border-radius: 4px;
+      animation: floatImage 4s ease-in-out infinite;
+      border: 1px solid #eaeaea;
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, z-index 0.3s ease;
+    }
+
+    /* Interaksi pas foto disentuh (Tab/Mobile friendly) */
+    .polaroid:hover, .polaroid:active {
+      transform: scale(1.15) !important;
+      z-index: 20;
+      box-shadow: 0 15px 35px rgba(181, 101, 118, 0.4);
+      animation: none; /* Berhenti melayang pas lagi dilihat */
+    }
+
+    /* Ini Selotipnya */
+    .polaroid::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%) rotate(-4deg);
+      width: 45px;
+      height: 18px;
+      background: rgba(239, 169, 185, 0.6);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      z-index: 2;
+    }
+
+    .polaroid:nth-child(1) { transform: rotate(-6deg); }
+    .polaroid:nth-child(2) { transform: rotate(3deg); animation-delay: 0.7s; }
+    .polaroid:nth-child(2)::before { transform: translateX(-50%) rotate(5deg); background: rgba(255, 255, 255, 0.7); }
+    .polaroid:nth-child(3) { transform: rotate(-4deg); animation-delay: 1.4s; }
+
+    .polaroid img {
+      width: 100%;
+      height: 135px;
+      object-fit: cover;
+      border-radius: 2px;
+      filter: contrast(1.05) brightness(1.05);
+    }
+
+    @keyframes floatImage {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.45); 
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 20px;
+      max-width: 650px;
+      box-shadow: 0 8px 32px 0 rgba(181, 101, 118, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      margin: 10px 0;
+      color: #444;
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    .nav-btn {
+      margin-top: 20px;
+      padding: 12px 30px;
+      border-radius: 50px;
+      border: none;
+      background: linear-gradient(135deg, #e5989b 0%, #b56576 100%);
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 400;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(181, 101, 118, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .nav-btn:hover { 
+      transform: translateY(-5px) scale(1.05); 
+      box-shadow: 0 12px 25px rgba(181, 101, 118, 0.5);
+    }
+
+    .typewriter-text::after {
+      content: '|';
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .music-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 999;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.5);
+      border-radius: 50%;
+      width: 45px;
+      height: 45px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: 0.3s;
+    }
+    .music-btn:hover { background: #fff; transform: scale(1.1); }
+
+    strong { color: #b56576; font-weight: 600; }
+
+    @media (max-width: 800px) {
+      h1.title, .intro h1 { font-size: 3rem; }
+      .photo-gallery { gap: 10px; margin: 10px 0 15px 0; }
+      .polaroid { width: 125px; padding: 6px 6px 8px 6px; }
+      .polaroid img { height: 125px; }
+      .card { padding: 20px; margin: 15px; font-size: 1rem;}
+      
+      .page {
+        justify-content: flex-start;
+        padding-top: 80px; 
+        padding-bottom: 50px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🔇</button>
+
+  <!-- INTRO -->
+  <div class="intro" id="intro">
+    <h1>Hai Quenaa</h1>
+    <p>Ada sesuatu untukmu nih, buka ya...</p>
+    <div class="open-btn" onclick="goPage('page1'); startMusic(); shootConfetti();">💌</div>
+    <p style="margin-top:10px; font-size:0.85rem;">(klik suratnya)</p>
+  </div>
+
+  <!-- PAGE 1 -->
+  <div class="page hidden" id="page1">
+    <h1 class="title">Sweet Fifteen Quen! 🎂</h1>
+
+    <!-- GALLERY 3 FOTO -->
+    <div class="photo-gallery">
+      <!-- FOTO 1 -->
+      <div class="polaroid">
+        <img src="foto1.jpeg" alt="Quenaa 1" />
+      </div>
+      <!-- FOTO 2 -->
+      <div class="polaroid">
+        <img src="foto2.jpeg" alt="Quenaa 2" />
+      </div>
+      <!-- FOTO 3 -->
+      <div class="polaroid">
+        <img src="foto3.jpeg" alt="Quenaa 3" />
+      </div>
+    </div>
+
+    <div class="card">
+      <p>Wih udah <strong>15 tahun</strong> nih!! 🎉
+      <br><br>
+      Happy birthday ya Quen! 🥳
+      <br><br> 
+      Semoga di umur baru ini kamu selalu diberi kesehatan,
+      dimudahkan langkahnya, dan selalu punya alasan buat tersenyum.
+      Welcome to your special day!
+      <br><br>
+      Ada pesan nih buat kamu, buka di bawah ya! 👇
+      </p>
+    </div>
+
+    <button class="nav-btn" onclick="goPage('page2')">Buka Pesan 💌</button>
+  </div>
+
+  <!-- PAGE 2 -->
+  <div class="page hidden" id="page2">
+    <h1 class="title">For You 💖</h1>
+
+    <div class="card" style="text-align: left;">
+      <p id="pesanQuenaa" class="typewriter-text"></p>
+    </div>
+
+    <button class="nav-btn" onclick="goPage('page1')">⬅ Kembali</button>
+  </div>
+
+  <script>
+    const textMessage = "Sekali lagi, Selamat ulang tahun ke-15 yaaa! 🎈<br><br>New age, new journey. Di umur yang baru ini, nggak apa-apa banget kalau kadang ada hari-hari yang bikin capek, moody, atau serba salah. Nggak semua hari harus sempurna, yang penting lo selalu ingat buat nggak terlalu keras sama diri sendiri. <br><br>Tumbuhlah dengan caramu sendiri. Semoga di usia ini kamu semakin percaya pada kemampuan diri sendiri, berani bermimpi lebih tinggi, dan tetap rendah hati dalam setiap pencapaian. Semangat terus ya! 🚀<br><br>Masa depan kamu masih panjang, dan banyak hal baik sedang menunggumu di depan ✨";
+    
+    let i = 0;
+    let isTyping = false;
+    
+    function typeWriter() {
+      if (i < textMessage.length) {
+        if (textMessage.charAt(i) === '<') {
+          document.getElementById("pesanQuenaa").innerHTML += "<br>";
+          i += 4; 
+        } else {
+          document.getElementById("pesanQuenaa").innerHTML += textMessage.charAt(i);
+          i++;
+        }
+        setTimeout(typeWriter, 50); 
+      } else {
+        document.getElementById("pesanQuenaa").classList.remove("typewriter-text");
+      }
+    }
+
+    function goPage(id) {
+      document.querySelectorAll('.intro, .page').forEach(el => el.classList.add('hidden'));
+      document.getElementById(id).classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (id === 'page2' && !isTyping) {
+        isTyping = true;
+        document.getElementById("pesanQuenaa").innerHTML = ""; 
+        i = 0;
+        setTimeout(typeWriter, 500); 
+      }
+    }
+
+    const bgm = document.getElementById('bgm');
+    const musicBtn = document.getElementById('musicBtn');
+    let isPlaying = false;
+
+    function startMusic() {
+      if (!isPlaying) {
+        bgm.play().catch(() => console.log("Autoplay diblokir browser"));
+        isPlaying = true;
+        musicBtn.innerHTML = '🔊';
+      }
+    }
+
+    function toggleMusic() {
+      if (isPlaying) {
+        bgm.pause();
+        isPlaying = false;
+        musicBtn.innerHTML = '🔇';
+      } else {
+        startMusic();
+      }
+    }
+
+    function createFloatingItems() {
+      const items = ['✨', '🤍', '🌸', '🎉', '🦋', '🎈','🎊', '🧸'];
+      const body = document.querySelector('body');
+      
+      for (let i = 0; i < 20; i++) {
+        let el = document.createElement('div');
+        el.innerText = items[Math.floor(Math.random() * items.length)];
+        el.classList.add('floating-item');
+        
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.fontSize = (Math.random() * 1.2 + 0.8) + 'rem';
+        
+        let duration = Math.random() * 15 + 15; 
+        let delay = Math.random() * 10;
+        
+        el.style.animationDuration = duration + 's';
+        el.style.animationDelay = delay + 's';
+        
+        body.appendChild(el);
+      }
+    }
+
+    /* Fungsi Buat Hujan Confetti */
+    function shootConfetti() {
+      const colors = ['#ffb8d1', '#b56576', '#ffd166', '#4cc9f0', '#ffffff'];
+      for (let i = 0; i < 100; i++) {
+        let conf = document.createElement('div');
+        conf.classList.add('confetti');
+        conf.style.left = Math.random() * 100 + 'vw';
+        conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        
+        // Bikin setengahnya bentuk lingkaran, setengahnya kotak
+        if (Math.random() > 0.5) {
+          conf.style.borderRadius = '50%';
+        }
+        
+        let duration = Math.random() * 3 + 2; // jatuh antara 2 - 5 detik
+        let delay = Math.random() * 1.5;
+        
+        conf.style.animationDuration = duration + 's';
+        conf.style.animationDelay = delay + 's';
+        
+        document.body.appendChild(conf);
+        
+        // Hapus elemen confetti setelah selesai jatuh biar web nggak lemot
+        setTimeout(() => conf.remove(), (duration + delay) * 1000);
+      }
+    }
+
+    window.onload = createFloatingItems;
+
+    /* SCRIPT UNTUK EFEK TAP MUNCUL HATI */
+    document.addEventListener('click', function(e) {
+      let heart = document.createElement('div');
+      heart.innerHTML = '💖';
+      heart.style.position = 'fixed';
+      heart.style.left = e.clientX + 'px';
+      heart.style.top = e.clientY + 'px';
+      heart.style.fontSize = '20px';
+      heart.style.pointerEvents = 'none';
+      heart.style.transform = 'translate(-50%, -50%)';
+      heart.style.animation = 'popHeart 1s ease-out forwards';
+      heart.style.zIndex = '9999';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 1000);
+    });
+  </script>
+</body>
+</html>
